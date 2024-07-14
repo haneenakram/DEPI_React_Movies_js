@@ -4,7 +4,7 @@ var base_url=`https://api.themoviedb.org/3/movie/`;
 var Links = document.querySelectorAll(".links a");
 console.log(Links);
 var apiUrl = 'now_playing';
-getApi(apiUrl);
+getApi();
 
 var selectedValue = null;
 
@@ -15,48 +15,59 @@ Links.forEach(function(link) {
         if(selectedValue!=="contact"){
             event.preventDefault(); 
             apiUrl=selectedValue;
-            console.log("Selected value:", selectedValue); // Log the selected value
+            // console.log("Selected value:", selectedValue); // Log the selected value
             getApi(apiUrl);
         }
     });
 });
 
-// async function ApiCall(request, options) {
-//     const response = fetch(request, options)
-//     .then((response) => response.json())
-//     .then((response) => response)
-//     .catch((err) => console.error(err));
-//     return response;
-// }
-var nowplayingmovies;
+var Movies;
+var forMovies=document.getElementById('forMovies');
 function getApi(apiUrl)
 {
+    if (!apiUrl) {
+        apiUrl = getLastSelectedApiUrl();
+        if (!apiUrl) {
+            console.error('No API URL provided and no last selected URL found.');
+            return;
+        }
+    } else {
+        saveLastSelectedApiUrl(apiUrl);
+    }
     fetch(`${base_url}${apiUrl}?api_key=${apiKey}&language=en-US&page=1`)
     .then(response => response.json())
     .then(data => {
-        nowplayingmovies=data.results;
-    // console.log(data.results);
-    if (nowplayingmovies && nowplayingmovies.length > 0) {
-            NowPlayingMovies();
-        }
-    else{
+        Movies=data.results;
+    if (Movies && Movies.length > 0) {
+        // console.log(`${base_url}${apiUrl}?api_key=${apiKey}&language=en-US&page=1`);
+        document.querySelector(".carousel-control-prev").classList.replace("d-none","d-block");
+        document.querySelector(".carousel-control-next").classList.replace("d-none","d-block");
+        NowPlayingMovies();
+    }else{
         str=`<div class="alert alert-primary" role="alert">
             there is no list
             </div>`
-        document.getElementById('carouselExampleControlsNoTouching').innerHTML = str;
+        document.querySelector(".carousel-control-prev").classList.replace("d-block","d-none");
+        document.querySelector(".carousel-control-next").classList.replace("d-block","d-none");
+        forMovies.innerHTML = str;
     }
-    console.log(nowplayingmovies)
+    console.log(Movies)
     })
     .catch(error => {
     console.error('Error fetching latest movies:', error);
     });
 }
-
-
+function saveLastSelectedApiUrl(apiUrl) {
+    localStorage.setItem('lastSelectedApiUrl', apiUrl);
+}
+function getLastSelectedApiUrl() {
+    return localStorage.getItem('lastSelectedApiUrl');
+}
 
 function NowPlayingMovies() {
+        // console.log(`${base_url}${apiUrl}?api_key=${apiKey}&language=en-US&page=1`);
     var str = '';
-    for (let i = 0; i < nowplayingmovies.length; i++) {
+    for (let i = 0; i < Movies.length; i++) {
         if (i % 4 === 0) {
             if (i === 0) {
                 str += '<div class="carousel-item active "><div class="row g-2">';
@@ -66,27 +77,27 @@ function NowPlayingMovies() {
         }
         str += `
             <div class="col-md-3 p-3 ">
-                <img class="img-fluid object-fit-fill w-100 object-fit-cover" src="https://image.tmdb.org/t/p/w500${nowplayingmovies[i].poster_path}" alt="poster">
+                <img class="img-fluid object-fit-fill w-100 object-fit-cover" src="https://image.tmdb.org/t/p/w500${Movies[i].poster_path}" alt="poster" onclick="movieDetails(${i})">
             </div>
         `;
     }
     str += '</div></div>'; // Close the last carousel-item and row
-    document.getElementById('forMovies').innerHTML = str;
+    forMovies.innerHTML = str;
 }
 
-
-for (let index = 0; index < array.length; index++) {
-    const element = array[index];
+function movieDetails(i){
     
 }
 
-
 function openNav() {
-    document.getElementById("mySidebar").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-}
-
-function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
+    if(document.getElementById("mySidebar").style.width == "0px"){
+        document.getElementById("mySidebar").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        document.querySelector("#main button").innerHTML="&times";
+        // console.log(document.querySelector("#main button").innerHTML)
+    }else{
+        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+        document.querySelector("#main button").innerHTML="☰";
     }
+}
