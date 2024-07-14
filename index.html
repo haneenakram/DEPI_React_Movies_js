@@ -42,16 +42,47 @@
                     <div class="search-container">
                         <div class="search-bar">
                             <input type="text" class="form-control" placeholder="Search...">
-                            <button type="submit">
+                            <button type="submit" onclick="getQuery()">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- search results -->
+            <div id="search-results" class="p-4 border-bottom d-none row position-relative">
+                <!-- <button onclick="">Back to home page</button> -->
+                <div class="position-absolute top-0 start-0 my-3">
+                <button onclick="location.href='index.html'" class="back btn bg-main-color border-none rounded-circle text-decoration-none "><i class="fa-solid fa-angle-left"></i></button>
+                </div>
+                <div class="row mt-5" id="results">
+
+                </div>
+            </div>
+            <!-- movie details -->
+            <div class="movie-details-container d-none justify-content-center align-items-center position-fixed"
+                id="movie-details-container">
+                <div class="movie-details-box col-md-6 col-sm-8 p-1 rounded-1" id="movie-details-box">
+                    <div class="movie-img position-relative">
+                        <i class="fa-solid fa-close fa-2x position-absolute make-pointer transition" id="close-btn"
+                            onclick="closewindow()"></i>
+                        <img src="" class="w-100" alt="movie img" id="movie-box-img">
+                    </div>
+                    <div class="content mt-3 p-4">
+                        <h3 class="fs-1" id="movie-title"></h3>
+
+                        <p id="lang"></p>
+                        <p id="avg-votes"></p>
+                        <p id="release-date"></p>
+                        <h4 class="fs-3">Overview : </h4>
+                        <p id="overview"></p>
+                        <a class=" btn btn-info" type="button" href="" id="source">add to favourites</a>
+                    </div>
+                </div>
+            </div>
 
             <!-- movies -->
-            <div id="carouselExampleControlsNoTouching" class="carousel slide p-4 border-bottom" data-bs-touch="false">
+            <div id="carouselExampleControlsNoTouching" class="carousel slide p-4 border-bottom d-flex" data-bs-touch="false">
                 <div class="carousel-inner d-block container" id="forMovies">
                     <!-- <div class="carousel-item active">
                         <img src="..." class="d-block w-100" alt="...">
@@ -63,6 +94,7 @@
                         <img src="..." class="d-block w-100" alt="...">
                     </div> -->
                 </div>
+                
                 <button class="carousel-control-prev d-none" type="button" data-bs-target="#carouselExampleControlsNoTouching"
                     data-bs-slide="prev">
                     <span class="carousel-control-prev-icon border rounded " aria-hidden="true"></span>

@@ -10,6 +10,7 @@ body{
     --main-color2: rgba(255, 0, 149, 0.812);
     --text-color: #818181;
     --text2-color :#363636;
+    --text3-color:#a2a2a2;
     --transition: a11 .5s ease-in-out;
 }
 .main-color{
@@ -21,6 +22,8 @@ body{
 .border-bottom{
     border-color: var(--text2-color) !important;
 }
+
+/* -------------------------------------sidebar------------------------------------- */
 .sidebar {
     height: 100%;
     width: 0;
@@ -50,11 +53,9 @@ body{
     display: block;
     transition: 0.3s;
 }
-
 .sidebar a:hover {
     color: #ffffff;
 }
-
 .sidebar .closebtn {
     position: absolute;
     top: 0;
@@ -62,7 +63,6 @@ body{
     font-size: 36px;
     margin-left: 50px;
 }
-
 .openbtn {
     font-size: 20px;
     height: 100vh;
@@ -73,11 +73,9 @@ body{
     padding: 10px 0px;
     border: none;
 }
-
 .openbtn:hover {
     background-color: #444;
 }
-
 #main {
     /*  */
     /* position: absolute; */
@@ -90,7 +88,50 @@ body{
     /* padding: 16px; */
 
 }
-
+/* -------------------------------------search bar------------------------------------- */
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+}
+.search-bar {
+    position: relative;
+    width: 100%;
+}
+.search-bar input {
+    border-radius: 50px;
+    background-color: var(--text2-color);
+    padding-right: 40px;
+    border: none;
+}
+.form-control::placeholder {
+    color: var(--text-color);
+}
+.search-bar button {
+    position: absolute;
+    color: var(--text-color);
+    top: 0;
+    right: 0;
+    background-color: transparent;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+.form-control {
+    background-color: var(--text2-color);
+    border: none;
+}
+#results img:hover{
+    transform: scale(1.1);
+    transition: transform 0.4s ease-in-out;
+    overflow: hidden;
+    cursor: pointer;
+}
+.back:hover{
+background-color: var(--main-color2);
+}
+/* -------------------------------------slider------------------------------------- */
 .carousel-control-prev-icon,
 .carousel-control-next-icon{
     width: 100% !important; 
@@ -107,56 +148,51 @@ body{
 .carousel-control-next span{
 font-size: 50% !important;
 }
-
 .carousel-item img:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
     transition: transform 0.4s ease-in-out;
-        overflow: hidden;
+    overflow: hidden;
+    cursor: pointer;
     /* Adjust the transition timing as needed */
 }
-
 .carousel-item {
     overflow: hidden;
     /* Ensure the image doesn't overflow its container */
 }
 
-.search-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50%;
-}
-
-.search-bar {
-    position: relative;
-    width: 100%;
-}
-
-.search-bar input {
-    border-radius: 50px;
-    background-color: var(--text2-color);
-    padding-right: 40px;
-    border: none;
-}
-.form-control::placeholder{
-    color: var(--text-color);
-}
-
-.search-bar button {
-    position: absolute;
-    color: var(--text-color);
-    top: 0;
-    right: 0;
-    background-color: transparent;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-}
-
-.form-control{
-    background-color: var(--text2-color);
-    border:  none;
-}
 .submit-btn:hover{
 background-color: var(--main-color2);
+}
+
+/*movie container*/
+.movie-details-container {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 1000000;
+    /* background-color: rgba(0, 0, 0, .5); */
+}
+
+.movie-details-box {
+    color: var(--text3-color);
+    background-color: var(--text2-color);
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+#close-btn {
+    top: 10px;
+    right: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 1%;
+}
+
+#close-btn:hover {
+    color: rgb(163, 30, 30);
+}
+
+img {
+    object-fit: cover;
 }
