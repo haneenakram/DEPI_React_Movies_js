@@ -1,0 +1,162 @@
+.transition {
+    transition: a11 .5s ease-in-out;
+}
+body{
+    background-color: #191919;
+    position: relative;
+}
+:root {
+    --main-color: rgb(255, 0, 149);
+    --main-color2: rgba(255, 0, 149, 0.812);
+    --text-color: #818181;
+    --text2-color :#363636;
+    --transition: a11 .5s ease-in-out;
+}
+.main-color{
+    color: var(--main-color);
+}
+.bg-main-color {
+    background-color: var(--main-color);
+}
+.border-bottom{
+    border-color: var(--text2-color) !important;
+}
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1000000000000000;
+    top: 0;
+    left: 0;
+    background-color: var(--text2-color);
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    color: var(--text-color);
+    flex-direction: column;
+}
+.sidebar .links{
+    flex-grow: 1;
+}
+.sidebar .copyright {
+    display: block;
+    transition: 0.3s;
+}
+.sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: var(--text-color);
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    color: #ffffff;
+}
+
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.openbtn {
+    font-size: 20px;
+    height: 100vh;
+    width: 60px;
+    cursor: pointer;
+    background-color: #111;
+    color: white;
+    padding: 10px 0px;
+    border: none;
+}
+
+.openbtn:hover {
+    background-color: #444;
+}
+
+#main {
+    /*  */
+    /* position: absolute; */
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    /*  */
+    transition: margin-left .5s;
+    /* padding: 16px; */
+
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon{
+    width: 100% !important; 
+    height:20% !important;
+    background-color: var(--main-color);
+    background-size: 50px 50px !important;
+}
+.carousel-control-prev,.carousel-control-next
+{
+    width: 5% !important;
+    justify-content: center;
+}
+.carousel-control-prev span
+.carousel-control-next span{
+font-size: 50% !important;
+}
+
+.carousel-item img:hover {
+    transform: scale(1.2);
+    transition: transform 0.4s ease-in-out;
+        overflow: hidden;
+    /* Adjust the transition timing as needed */
+}
+
+.carousel-item {
+    overflow: hidden;
+    /* Ensure the image doesn't overflow its container */
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+}
+
+.search-bar {
+    position: relative;
+    width: 100%;
+}
+
+.search-bar input {
+    border-radius: 50px;
+    background-color: var(--text2-color);
+    padding-right: 40px;
+    border: none;
+}
+.form-control::placeholder{
+    color: var(--text-color);
+}
+
+.search-bar button {
+    position: absolute;
+    color: var(--text-color);
+    top: 0;
+    right: 0;
+    background-color: transparent;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.form-control{
+    background-color: var(--text2-color);
+    border:  none;
+}
+.submit-btn:hover{
+background-color: var(--main-color2);
+}
