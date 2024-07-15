@@ -7,7 +7,9 @@ var Movies;
 var forMovies=document.getElementById('forMovies');
 var apiUrl = 'now_playing';
 var selectedValue = null;
-getApi();
+var title =document.getElementById("categoryTitle");
+
+getApi(apiUrl,"home");
 // ----------------------------------------search----------------------------------------
 
 document.getElementById('search-input').addEventListener('keydown', function(event) {
@@ -20,6 +22,8 @@ function getQuery(){
     const query = document.querySelector('.form-control').value;
         if (query.length >= 3) {
         searchMovie(query);
+    title.innerHTML=`<span class="text-light fs-5 "> The results about: </span>${query} `
+
     } else {
         alert('Please enter more than 3 characters.');
     }
@@ -29,26 +33,10 @@ function back(){
     location.href='index.html';
     document.getElementById("search-results").classList.replace("d-flex","d-none");
 }
-// function searchMovie(query) {
-//     var str='';
-//     var resultsDiv = document.getElementById('results');
-//     fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.results && data.results.length > 0) {
-//                 displayResults(data.results);
-//             } else {
-//                 str=`<div class="alert alert-primary" role="alert">
-//             No movies found
-//             </div>`
-//             }
-//         })
-//         .catch(error => console.error('Error:', error));
-//         resultsDiv.innerHTML = str;
-// }
+
 async function searchMovie(query) {
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '<div class="d-flex justify-content-center my-5"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
+    // const resultsDiv = document.getElementById('results');
+    // resultsDiv.innerHTML = '<div class="d-flex justify-content-center my-5"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
 
     try {
     const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`);
@@ -57,49 +45,57 @@ async function searchMovie(query) {
     if (data.results && data.results.length > 0) {
         await displayResults(data.results);
     } else {
-        resultsDiv.innerHTML = `
-        <div class="alert alert-primary" role="alert">
+        document.getElementById("search-results").classList.replace("d-none", "d-flex");
+        forMovies.innerHTML = `
+        <div class="alert alert-dark text-light text-center" role="alert">
             No movies found
         </div>
         `;
     }
     } catch (error) {
+    document.getElementById("search-results").classList.replace("d-none", "d-flex");
     console.error('Error:', error);
-    resultsDiv.innerHTML = `
-        <div class="alert alert-danger" role="alert">
-        An error occurred while searching for movies.
+    forMovies.innerHTML = `
+        <div class="alert alert-dark text-light text-center" role="alert">
+            No movies found 
         </div>
     `;
     }
 }
 
 function displayResults(searchMovies) {
-    document.getElementById("carouselExampleControlsNoTouching").classList.replace("d-flex", "d-none");
     document.getElementById("search-results").classList.replace("d-none", "d-flex");
-    var resultsDiv = document.getElementById('results');
+    // var resultsDiv = document.getElementById('results');
     var str = '';
     for (let i = 0; i < searchMovies.length; i++) {
-        // Check if the poster_path is valid before adding the image
         if (searchMovies[i].poster_path) {
+            console.log(searchMovies[i])
             str += `
             <div class="col-md-3 p-3">
-                <img class="img-fluid object-fit-fill w-100 object-fit-cover" src="https://image.tmdb.org/t/p/w500${searchMovies[i].poster_path}" alt="${searchMovies[i].title}" data-movie="${encodeURIComponent(JSON.stringify(searchMovies[i]))}">
+                <div class="movieBox position-relative" onclick="getApi(${searchMovies[i].id},'movie details')">
+                    <img class="main-img img-fluid object-fit-fill w-100 object-fit-cover" src="https://image.tmdb.org/t/p/w500${searchMovies[i].poster_path}" alt="poster" >
+                    <div class="p-0 m-0 movieDetails position-absolute d-flex flex-column justify-content-around">
+                        <img src="https://image.tmdb.org/t/p/w500${searchMovies[i].backdrop_path}" class='w-100 h-100 position-absolute'> 
+                        <div class="content w-100 h-100 p-2">
+                            <h5 class="text-center d-flex flex-nowrap">${searchMovies[i].original_title}</h5>
+                            <span class="me-3">${searchMovies[i].vote_average}</span>
+                            <span>${searchMovies[i].release_date}</span>
+                            <p w-inherit>${searchMovies[i].overview}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
             `;
         } else {
             console.log(`Skipping movie ${searchMovies[i].title} due to missing or invalid poster_path.`);
         }
     }
-    resultsDiv.innerHTML = str; 
-    // console.log(resultsDiv);
-
-// dataset is a property of the DOM element that provides access to all the custom data attributes (attributes starting with data-) on the element.
-// dataset.movie specifically refers to the value of the data-movie attribute of the current <img> element.
-    document.querySelectorAll('#results .col-md-3 img').forEach(img => {
-        img.addEventListener('click', function() {
-            movieDetails(this.dataset.movie);
-        });
-    });
+    forMovies.innerHTML = str; 
+    // document.querySelectorAll('#results .col-md-3 img').forEach(img => {
+    //     img.addEventListener('click', function() {
+    //         movieDetails(this.dataset.movie);
+    //     });
+    // });
 }
 
 // ----------------------------------------sidebar links----------------------------------------
@@ -122,16 +118,21 @@ Links.forEach(function(link) {
         if(selectedValue!=="contact"){
             event.preventDefault(); 
             apiUrl=selectedValue;
+            title.innerHTML=selectedValue
             // console.log("Selected value:", selectedValue); // Log the selected value
-            getApi(apiUrl);
+            getApi(apiUrl,"home");
         }
     });
 });
 
 // ----------------------------------------API----------------------------------------
 
-function getApi(apiUrl)
+function getApi(apiUrl,destination)
 {
+    // console.log(`${base_url}${apiUrl}?api_key=${apiKey}&language=en-US&page=1`)
+    // console.log(destination)
+    // console.log("fel getapi")
+
     if (!apiUrl) {
         apiUrl = getLastSelectedApiUrl();
         if (!apiUrl) {
@@ -144,17 +145,23 @@ function getApi(apiUrl)
     fetch(`${base_url}${apiUrl}?api_key=${apiKey}&language=en-US&page=1`)
     .then(response => response.json())
     .then(data => {
-        Movies=data.results;
-    if (Movies && Movies.length > 0) {
-        document.querySelector(".carousel-control-prev").classList.replace("d-none","d-block");
-        document.querySelector(".carousel-control-next").classList.replace("d-none","d-block");
-        NowPlayingMovies();
-    }else{
+        // console.log(data);
+        // if (Movies && Movies.length > 0) {
+        if(destination=="home")
+            {
+            Movies=data.results;
+            NowPlayingMovies();
+            console.log("gowa home")
+        }
+        else if(destination =="movie details"){
+            // console.log("gowa movie details")
+            movieDetails(data);
+        }
+    // }
+    else{
         str=`<div class="alert alert-primary" role="alert">
             No movies found
-            </div>`
-        document.querySelector(".carousel-control-prev").classList.replace("d-block","d-none");
-        document.querySelector(".carousel-control-next").classList.replace("d-block","d-none");
+            </div>`;
         forMovies.innerHTML = str;
     }
     // console.log(Movies)
@@ -175,123 +182,349 @@ function getLastSelectedApiUrl() {
 // ----------------------------------------Home----------------------------------------
 
 function NowPlayingMovies() {
-        // console.log(`${base_url}${apiUrl}?api_key=${apiKey}&language=en-US&page=1`);
     var str = '';
     for (let i = 0; i < Movies.length; i++) {
-        if (i % 4 === 0) {
-            if (i === 0) {
-                str += '<div class="carousel-item active "><div class="row g-2">';
-            } else {
-                str += '</div></div><div class="carousel-item"><div class="row g-2">';
-            }
-        }
+        //data-movie="${encodeURIComponent(JSON.stringify(Movies[i]))}""
+        // console.log(`${base_url}${Movies[i].id}?api_key=${apiKey}&language=en-US&page=1`)
+        // console.log(Movies[i].id);
         str += `
             <div class="col-md-3 p-3">
-                <img class="img-fluid object-fit-fill w-100 object-fit-cover" src="https://image.tmdb.org/t/p/w500${Movies[i].poster_path}" alt="poster" data-movie="${encodeURIComponent(JSON.stringify(Movies[i]))}">
+                <div class="movieBox position-relative" onclick="getApi(${Movies[i].id},'movie details')">
+                    <img class="main-img img-fluid object-fit-fill w-100 object-fit-cover" src="https://image.tmdb.org/t/p/w500${Movies[i].poster_path}" alt="poster" >
+                    <div class="p-0 m-0 movieDetails position-absolute d-flex flex-column justify-content-around">
+                        <img src="https://image.tmdb.org/t/p/w500${Movies[i].backdrop_path}" class='w-100 h-100 position-absolute'> 
+                        <div class="content w-100 h-100 p-2">
+                            <h5 class="text-center d-flex flex-nowrap">${Movies[i].original_title}</h5>
+                            <span class="me-3">${Movies[i].vote_average}</span>
+                            <span>${Movies[i].release_date}</span>
+                            <p w-inherit>${Movies[i].overview}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
-        // console.log(Movies[i]);
     }
-    str += '</div></div>'; // Close the last carousel-item and row
     forMovies.innerHTML = str;
-    // Add click event listener to the images
-    document.querySelectorAll('#forMovies .col-md-3 img').forEach(img => {
-        img.addEventListener('click', function() {
-            movieDetails(this.dataset.movie);
-        });
-    });
+    // console.log(document.querySelectorAll('.movieBox'))
+    
+        // document.querySelectorAll('.movieBox ').forEach((item) => {
+        //     // console.log('Adding event listener to:', item);
+        //     item.onclick=()=>{
+        //         console.log(item)
+        //         // console.log(item.dataset);
+        //         //item.dataset.movie
+
+        //         // getApi(item.dataset.movie,"movie details")
+        //     }
+        // });
 }
 
 var movieDetailsBox = document.querySelector('#movie-details-container')
-function movieDetails(item){
-    console.log("clicked");
-    item = JSON.parse(decodeURIComponent(item)); // Decode the URI component
-    console.log(item);
-    movieDetailsBox.classList.replace('d-none', 'd-flex')
-    document.getElementById("movie-box-img").src=`https://image.tmdb.org/t/p/w500${item.backdrop_path}`;
-    document.getElementById("movie-title").innerHTML=`${item.original_title}`;
-    document.getElementById("lang").innerHTML=`Language : ${item.original_language}`;
-    document.getElementById("avg-votes").innerHTML=`Votes : ${item.vote_average}`;
-    document.getElementById("release-date").innerHTML=`Release date : ${item.release_date}`;
-    document.getElementById("overview").innerHTML=`${item.overview}`;
+function movieDetails(data){
+    // console.log("clicked");
+    // item = JSON.parse(decodeURIComponent(item)); // Decode the URI component
+    // console.log(data);
+    movieDetailsBox.classList.replace('d-none', 'd-flex');
+    let genres = data.genres.map((genre) => genre.name).join(", ");
+    let productionCompanies = data.production_companies
+        .map((company) => company.name)
+        .join(", ");
+        let str = `
+        <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card bg-dark text-white border-0">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2>${data.title}</h2>
+                <i class="fa-regular fa-circle-xmark" id="close-icon" onclick="closewindow()"></i>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                <div class="col-md-4">
+                    <img
+                    src="https://image.tmdb.org/t/p/w500${data.poster_path}"
+                    alt="${data.title}"
+                    class="img-fluid rounded"
+                    />
+                </div>
+                <div class="col-md-8">
+                    <p class="text-muted">${data.tagline}</p>
+                    <p><strong>Overview:</strong> ${data.overview}</p>
+                    <p><strong>Genres:</strong> ${genres}</p>
+                    <p><strong>Release Date:</strong> ${data.release_date}</p>
+                    <p><strong>Runtime:</strong> ${data.runtime} minutes</p>
+                    <p><strong>Rating:</strong> ${
+                    data.vote_average
+                    } <i class="fas fa-star text-warning"></i> (${
+        data.vote_count
+    } votes)</p>
+                    <p><strong>Production Companies:</strong> ${productionCompanies}</p>
+                    <p><strong>Budget:</strong> $${data.budget.toLocaleString()}</p>
+                    <p><strong>Revenue:</strong> $${data.revenue.toLocaleString()}</p>
+                    <a href="${
+                    data.homepage
+                    }" class="btn btn-primary">Official Website</a>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    `;
+    movieDetailsBox.innerHTML = str;
 }
 
 function closewindow(){
     movieDetailsBox.classList.replace('d-flex', 'd-none')
 }
 
-//  {
-//       "adult": false,
-//       "backdrop_path": "/fDmci71SMkfZM8RnCuXJVDPaSdE.jpg",
-//       "genre_ids": [
-//         16,
-//         10751,
-//         35,
-//         28
-//       ],
-//       "id": 519182,
-//       "original_language": "en",
-//       "original_title": "Despicable Me 4",
-//       "overview": "Gru and Lucy and their girls — Margo, Edith and Agnes — welcome a new member to the Gru family, Gru Jr., who is intent on tormenting his dad. Meanwhile, Gru faces a new nemesis in Maxime Le Mal and his femme fatale girlfriend Valentina, forcing the family to go on the run.",
-//       "poster_path": "/3w84hCFJATpiCO5g8hpdWVPBbmq.jpg",
-//       "release_date": "2024-06-20",
-//       "title": "Despicable Me 4",
-//       "vote_average": 7.512,
-//       "vote_count": 241
-//     },
-
 
 // ----------------------------------------validation----------------------------------------
-document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting
 
-    // Get the form field values
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
-    var phone = document.getElementById('phone').value;
-    var age = document.getElementById('age').value;
-    var password = document.getElementById('password').value;
-    var confirmPassword = document.getElementById('confirm-password').value;
-
-    // Define the regular expressions for validation
-    var nameRegex = /^[a-zA-Z\s]+$/;
-    var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    var phoneRegex = /^\+?\d{1,3}?[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/;
-    var ageRegex = /^\d+$/;
-    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    // Validate the form fields
-    if (!nameRegex.test(name)) {
-        alert('Please enter a valid name.');
-        return;
+/*Contact Validation*/
+let praintAlert = (id, msg, show=true)=>{
+  if(show){
+    $(id).html(`
+      <div class="alert alert-danger" role="alert">
+        ${msg}
+      </div>`
+    );
+  }else{
+    $(id).html(``);
+  }
+}
+let addValidationClass = (elem, valid=true)=>{
+    if(valid){
+      $(elem).removeClass('is-invalid')
+      $(elem).addClass('is-valid')
+    }else{
+      $(elem).addClass('is-invalid')
+      $(elem).removeClass('is-valid')
     }
+}
 
-    if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address.');
-        return;
+/*Validate User Name*/
+const username = document.getElementById('username')
+username.addEventListener('input', function(e){
+  e.preventDefault();
+  usernameValidation(this.value)
+  removeDisabled()
+})
+
+let usernameValidation = (value)=>{
+    let RegExp = /^[\w\s_\.@]{4,20}$/;
+    if(value != undefined){
+        if(!RegExp.test(value)){
+        addValidationClass(username, false)
+        if(value == '' || value.length == 0){
+            praintAlert('#alertName', '', false)
+        }
+        else if(value.length < 4){
+            praintAlert('#alertName', 'Your name should be 4 characters at less')
+        }else if(value.length > 20){
+            praintAlert('#alertName', 'Your name should\'nt more than 20 characters')
+        }else{
+            praintAlert('#alertName', 'You can use letters, numbers, spaces and [@ . _]')
+        }
+        return false;
+        }else{
+        addValidationClass(username)
+        praintAlert('#alertName', '', false)
+        return true
+        }
+    }else{
+        return false
     }
+}
 
-    if (!phoneRegex.test(phone)) {
-        alert('Please enter a valid phone number.');
-        return;
-    }
-
-    if (!ageRegex.test(age) || parseInt(age) < 18) {
-        alert('Please enter a valid age (18 or above).');
-        return;
-    }
-
-    if (!passwordRegex.test(password)) {
-        alert('Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        alert('Password and Confirm Password must match.');
-        return;
-    }
-
-    // If all validations pass, submit the form
-    alert('Form submitted successfully!');
-    this.submit();
+/*Validate Email*/
+const userEmail = document.getElementById('userEmail');
+userEmail.addEventListener('input', function(e){
+    e.preventDefault();
+    userEmailValidation(userEmail.value)
+    removeDisabled()
 });
+
+let userEmailValidation = (value)=>{
+    let RegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    if( value != undefined){
+        if(!RegExp.test(value)){
+        addValidationClass(userEmail, false)
+        if(value == '' || value.length == 0){
+            praintAlert('#alertEmail', '', false)
+        }
+        else{
+            praintAlert('#alertEmail', 'Please Inter Correct Email')
+        }
+        return false
+        }else{
+        addValidationClass(userEmail)
+        praintAlert('#alertEmail', '', false)
+        return true
+        }
+    }else{
+        return false
+    }
+} 
+
+/*Validate Phone*/
+const userPhone = document.getElementById('userPhone')
+userPhone.addEventListener('input', function(e){
+    e.preventDefault();
+    userPhonelValidation(this.value)
+    removeDisabled();
+})
+
+let userPhonelValidation = (value)=>{
+    let RegExp = /^01[0125][0-9]{8}$/
+    if(value != undefined){
+        if(!RegExp.test(value.trim())){
+        addValidationClass(userPhone, false)
+        if(value == '' || value.length == 0){
+            praintAlert('#alertPhone', '', false)
+        }
+        else{
+            praintAlert('#alertPhone', 'Please Enter Correct Phone Number')
+        }
+        return false
+        }else{
+        addValidationClass(userPhone)
+        praintAlert('#alertPhone', '', false)
+        return true
+        }
+    }else{
+        return false
+    }
+    
+} 
+/*Validate Age*/
+const userAge = document.getElementById('userAge')
+userAge.addEventListener('input', function(e){
+    e.preventDefault();
+    userAgelValidation(this.value)
+    removeDisabled()
+})
+
+let userAgelValidation = (value)=>{
+    let RegExp = /^([1-8][0-9]|90)$/
+    if(value != undefined){
+        if(!RegExp.test(value.trim())){
+        addValidationClass(userAge, false)
+        if(value == '' || value.length == 0){
+            praintAlert('#alertAge', '', false)
+        }
+        else{
+            praintAlert('#alertAge', 'Please Inter Correct Age')
+        }
+        return false
+        }else{
+            addValidationClass(userAge)
+            praintAlert('#alertAge', '', false)
+        return true
+        }
+    }else{
+        return false
+    }
+} 
+/*Validate Pass*/
+const userPass = document.getElementById('userPass')
+userPass.addEventListener('input', function(e){
+    e.preventDefault();
+    userPassValidation(this.value)
+    removeDisabled()
+})
+
+let userPassValidation = (value)=>{
+    let RegExp = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/
+    if( value != undefined){
+        if(!RegExp.test(value.trim())){
+        addValidationClass(userPass, false)
+        if(value == '' || value.length == 0){
+            praintAlert('#alertPass', '', false)
+        }else if(value.length < 8){
+            praintAlert('#alertPass', 'Your password have to 8 characters at less')
+        }
+        else if(value.length > 16){
+            praintAlert('#alertPass', 'Your password should\'nt be more than 16 characters')
+        }
+        else{
+            praintAlert('#alertPass', 'Your password have to contain a number at less and a sympol Like [!@#$%^&*], and letters')
+        }
+        return false
+        }else{
+        addValidationClass(userPass)
+        praintAlert('#alertPass', '', false)
+        return true
+        }
+    }else{
+        return false
+    }
+} 
+const userVPass = document.getElementById('userVPass')
+userVPass.addEventListener('input', function(e){
+  e.preventDefault();
+  userPassMatch(this.value)
+  removeDisabled()
+})
+
+let userPassMatch = (value)=>{
+if(value != undefined){
+  if(value != userPass.value){
+    addValidationClass(userVPass, false)
+    praintAlert('#alertVPass', 'Your password not match, please check your password above') 
+    return false
+  }else{
+      addValidationClass(userVPass)
+      praintAlert('#alertVPass', '', false)
+      return true
+   }
+}else{
+  return false
+}
+} 
+
+
+let removeDisabled =()=>{
+  if(usernameValidation(username.value) &&
+    userEmailValidation(userEmail.value) &&
+    userPhonelValidation(userPhone.value) &&
+    userAgelValidation(userAge.value) &&
+    userPassValidation(userPass.value) &&
+    userPassMatch(userVPass.value)){
+      console.log('it\'s ready')
+      $('#submitBtn').attr('disabled', false)
+    }else{
+      $('#submitBtn').attr('disabled', true)
+    }
+}
+
+// document.getElementById("showPass")
+function showpass(){
+if($(userPass).attr('type') === 'password'){
+    $(userPass).attr('type', 'text')
+    $(userVPass).attr('type', 'text')
+    $(this).removeClass('fa-eye')
+    $(this).addClass('fa-eye-slash')
+}else{
+    $(userPass).attr('type', 'password')
+    $(userVPass).attr('type', 'password')
+    $(this).removeClass('fa-eye-slash')
+    $(this).addClass('fa-eye')
+}
+}
+
+
+// $(window).scroll(function(){
+//   if($(window).scrollTop() > 1000){
+//       $('#btn-up').fadeIn(500)
+//   }else{
+//       $('#btn-up').fadeOut(500)
+//   }
+// })
+// $('#btn-up').click(function(){
+//   $('html,body').animate({scrollTop: 0}, 1000);
+// })
+// $('#menu a').click(function(){
+//    $('body,html').animate({scrollTop: $($(this).attr('href')).offset().top}, 1000)
+// })
+
+// new WOW().init();
