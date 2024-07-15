@@ -88,6 +88,13 @@ body{
     /* padding: 16px; */
 
 }
+@media (max-width: 768px) {
+    .openbtn {
+        height: auto;
+        width: auto;
+        padding: 10px;
+    }
+}
 /* -------------------------------------search bar------------------------------------- */
 .search-container {
     display: flex;
@@ -121,6 +128,17 @@ body{
 .form-control {
     background-color: var(--text2-color);
     border: none;
+}
+.form-control:focus {
+    color: var(--text3-color);
+    font-weight: bold;
+    background-color: var(--text2-color);
+}
+
+ .form-control {
+    color: var(--text3-color);
+    font-weight: bold;
+    background-color: var(--text2-color);
 }
 #results img:hover{
     transform: scale(1.1);
@@ -196,3 +214,4 @@ background-color: var(--main-color2);
 img {
     object-fit: cover;
 }
+

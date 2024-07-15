@@ -15,9 +15,9 @@
 <body>
     <div class="container">
         <!-- sidebar -->
+        <div class="not main content">
         <div id="mySidebar" class="sidebar d-flex">
             <div class="links">
-                <!-- <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a> -->
                 <a href="" id="now_playing">Now Playing</a>
                 <a href="" id="popular">Popular</a>
                 <a href="" id="top_rated">Top Rated</a>
@@ -32,7 +32,7 @@
         <div id="main" class="">
             <button class="openbtn" onclick="openNav()">☰</button>
         </div>
-
+        </div>
         <div class="main-content flex-grow-1">
             
             <!-- header -->
@@ -41,7 +41,7 @@
                     <h1 class="text-light me-3"> <span class="main-color">M</span>ovies <span class="text-primary">N</span>ews</h1>
                     <div class="search-container">
                         <div class="search-bar">
-                            <input type="text" class="form-control" placeholder="Search...">
+                            <input type="text" class="form-control" id="search-input" placeholder="Search...">
                             <button type="submit" onclick="getQuery()">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -49,16 +49,18 @@
                     </div>
                 </div>
             </div>
+
             <!-- search results -->
             <div id="search-results" class="p-4 border-bottom d-none row position-relative">
                 <!-- <button onclick="">Back to home page</button> -->
                 <div class="position-absolute top-0 start-0 my-3">
-                <button onclick="location.href='index.html'" class="back btn bg-main-color border-none rounded-circle text-decoration-none "><i class="fa-solid fa-angle-left"></i></button>
+                <button onclick="back()" class="back btn bg-main-color border-none rounded-circle text-decoration-none "><i class="fa-solid fa-angle-left"></i></button>
                 </div>
                 <div class="row mt-5" id="results">
 
                 </div>
             </div>
+
             <!-- movie details -->
             <div class="movie-details-container d-none justify-content-center align-items-center position-fixed"
                 id="movie-details-container">
@@ -111,14 +113,15 @@
             <div id="contact-us">
                 <div class="container justify-content-center">
                     <h2 class="text-light my-4 text-center">Contact Us</h2>
-                    <form action="" class="row m-2">
-                        <input type="text" class="form-control m-2" placeholder="Enter your name">
-                        <input type="email" class="form-control m-2" placeholder="Enter your email">
-                        <input type="phone" class="form-control m-2" placeholder="Enter your phone">
-                        <input type="text" class="form-control m-2" placeholder="Enter your age">
-                        <input type="password" class="form-control m-2" placeholder="Enter your password">
-                        <input type="password" class="form-control m-2" placeholder="Re enter your password">
-                        <button type="submit" class="submit-btn col-md-1 m-2 rounded text-light bg-main-color border-none btn ">submit</button>
+                    <form id="contact-form" class="row m-2">
+                        <input type="text" id="name" class="form-control m-2" placeholder="Enter your name" required>
+                        <input type="email" id="email" class="form-control m-2" placeholder="Enter your email" required>
+                        <input type="tel" id="phone" class="form-control m-2" placeholder="Enter your phone" required>
+                        <input type="text" id="age" class="form-control m-2" placeholder="Enter your age" required>
+                        <input type="password" id="password" class="form-control m-2" placeholder="Enter your password" required>
+                        <input type="password" id="confirm-password" class="form-control m-2" placeholder="Re-enter your password" required>
+                        <button type="submit"
+                            class="submit-btn col-md-1 m-2 rounded text-light bg-main-color border-none btn">submit</button>
                     </form>
                 </div>
             </div>
