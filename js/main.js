@@ -136,11 +136,11 @@ function openNav() {
 Links.forEach(function(link) {
     link.addEventListener("click", function(event) {
         selectedValue = this.getAttribute("id");
-        if(selectedValue!=="contact"){
+        if(selectedValue!=="contactUs"){
             event.preventDefault(); 
             apiUrl=selectedValue;
             title.innerHTML=tobetitle[selectedValue];
-            // console.log("Selected value:", selectedValue); // Log the selected value
+            console.log("Selected value:", selectedValue); // Log the selected value
             getApi(apiUrl,"home");
         }
     });
