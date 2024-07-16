@@ -8,8 +8,26 @@ var forMovies=document.getElementById('forMovies');
 var apiUrl = 'now_playing';
 var selectedValue = null;
 var title =document.getElementById("categoryTitle");
+var color_taken = localStorage.getItem("color");
+document.documentElement.style.setProperty("--main-color", color_taken);
 
 getApi(apiUrl,"home");
+
+// ----------------------------------------color selector----------------------------------------
+
+function toggleColorPicker() {
+    const colorPicker = document.querySelector('.color-picker');
+    colorPicker.classList.toggle('show');
+}
+const colorOptions = document.querySelectorAll('.color-option');
+colorOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        const color = event.target.getAttribute("data-color");
+    document.documentElement.style.setProperty("--main-color", color);
+    localStorage.setItem("color", color);
+    });
+});
+
 // ----------------------------------------search----------------------------------------
 
 document.getElementById('search-input').addEventListener('keydown', function(event) {
@@ -28,16 +46,11 @@ function getQuery(){
         alert('Please enter more than 3 characters.');
     }
 }
-
 function back(){
     location.href='index.html';
     document.getElementById("search-results").classList.replace("d-flex","d-none");
 }
-
 async function searchMovie(query) {
-    // const resultsDiv = document.getElementById('results');
-    // resultsDiv.innerHTML = '<div class="d-flex justify-content-center my-5"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
-
     try {
     const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`);
     const data = await response.json();
@@ -47,7 +60,7 @@ async function searchMovie(query) {
     } else {
         document.getElementById("search-results").classList.replace("d-none", "d-flex");
         forMovies.innerHTML = `
-        <div class="alert alert-dark text-light text-center" role="alert">
+        <div class="alert alert-dark text-light text-center search" role="alert">
             No movies found
         </div>
         `;
@@ -56,7 +69,7 @@ async function searchMovie(query) {
     document.getElementById("search-results").classList.replace("d-none", "d-flex");
     console.error('Error:', error);
     forMovies.innerHTML = `
-        <div class="alert alert-dark text-light text-center" role="alert">
+        <div class="alert alert-dark text-light text-center search" role="alert">
             No movies found 
         </div>
     `;
@@ -99,6 +112,14 @@ function displayResults(searchMovies) {
 }
 
 // ----------------------------------------sidebar links----------------------------------------
+var tobetitle={
+top_rated: "Top Rated",
+now_playing: "Now Playing",
+trending: "Trending",
+upcoming: "Upcoming",
+popular: "Popular",
+favorite: "Favorite",
+}
 
 function openNav() {
     if(document.getElementById("mySidebar").style.width == "0px"){
@@ -118,7 +139,7 @@ Links.forEach(function(link) {
         if(selectedValue!=="contact"){
             event.preventDefault(); 
             apiUrl=selectedValue;
-            title.innerHTML=selectedValue
+            title.innerHTML=tobetitle[selectedValue];
             // console.log("Selected value:", selectedValue); // Log the selected value
             getApi(apiUrl,"home");
         }

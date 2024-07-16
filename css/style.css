@@ -1,6 +1,9 @@
 .transition {
     transition: a11 .5s ease-in-out;
 }
+html{
+        scroll-behavior: smooth;
+}
 body{
     background-color: #191919;
     position: relative;
@@ -17,9 +20,9 @@ body{
     --normal-font: "Roboto", sans-serif;
     scroll-behavior: auto;
 }
-.alert{
+.alert.search{
         box-shadow: 0 0 0 0.25rem var(--main-color) !important;
-        background-color: var(--main-color2);
+        background-color: var(--text2-color);
         outline: none;
         border: none;
 }
@@ -27,7 +30,10 @@ body{
     color: var(--main-color);
 }
 .bg-main-color {
-    background-color: var(--main-color2);
+    background-color: var(--main-color);
+}
+.bg-light-gray{
+    background-color: var(--text-color);
 }
 .border-bottom{
     border-color: var(--text2-color) !important;
@@ -36,7 +42,87 @@ body{
     border-color: var(--main-color);
 }
 
+.color-picker.show {
+    transform: translateX(0);
+}
+.color-picker{
+    transform: translateX(100%);
+    top: 100px;
+    height: 50px;
+    cursor: pointer;
+    justify-content: center;
+    transition: all 0.5s ease-in-out;
+    z-index: 999;
+}
+.color-option {
+    width: 50px;
+    height: 50px;
+    border-width: 1px;
+    border-color: transparent;
+    border-style: solid;
+    display: inline-block;
+}
+li:focus-within .color-option {
+    border-color: rgb(221, 221, 221);
+}
 
+li {
+    outline: none;
+}
+.gear{
+    left: -24px;
+    top: 5px;
+}
+#icon{
+    animation: rotate 2s linear infinite;
+}
+
+.color-options li div {
+    height: 25px;
+    border-radius: 30%;
+    cursor: pointer;
+}
+
+.color-options li:nth-child(1) div {
+    background-color: #d8006c;
+}
+
+.color-options li:nth-child(2) div {
+    background-color: #8f00d1;
+}
+
+.color-options li:nth-child(3) div {
+    background-color: #0049d1;
+}
+
+.color-options li:nth-child(4) div {
+    background-color: #00c472;
+}
+
+.color-options li:nth-child(5) div {
+    background-color: #babd00;
+}
+
+.color-options li:nth-child(6) div {
+    background-color: #b86200;
+}
+
+.color-options li:nth-child(7) div {
+    background-color: #ce0000;
+}
+
+.color-options li:nth-child(8) div {
+    background-color: #b9006c;
+}
+@keyframes rotate {
+    0% {
+            transform: rotate(0deg);
+        }
+    
+    100% {
+        transform: rotate(360deg);
+    }
+}
 /* -------------------------------------sidebar------------------------------------- */
 .sidebar {
     height: 100%;
@@ -74,6 +160,7 @@ body{
     color: #ffffff;
 }
 .sidebar .closebtn {
+        z-index: 100000000;
     position: absolute;
     top: 0;
     right: 25px;
@@ -81,6 +168,7 @@ body{
     margin-left: 50px;
 }
 .openbtn {
+    z-index: 100000000;
     font-size: 20px;
     height: 100vh;
     width: 60px;
@@ -94,15 +182,13 @@ body{
     background-color: #444;
 }
 #main {
+        z-index: 100000000;
     /*  */
-    /* position: absolute; */
     position: fixed;
-    z-index: 10;
     left: 0;
     top: 0;
     /*  */
     transition: margin-left .5s;
-    /* padding: 16px; */
 
 }
 @media (max-width: 768px) {
@@ -162,7 +248,7 @@ body{
     cursor: pointer;
 }
 .back:hover{
-background-color: var(--main-color2);
+background-color: var(--main-color);
 }
 
 /*movie container*/
@@ -285,3 +371,22 @@ img {
 .active-link {
     color: var(--main-color) !important;
 }
+.up {
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+transition: 0.5s;  
+}
+.up .btn:hover{
+    background-color: var(--main-color);
+}
+.move-up:hover  i{
+    animation: to-up 1s infinite linear ;}
+
+@keyframes to-up 
+{
+    100%{
+        transform: translateY(-30px);
+    }
+}
+

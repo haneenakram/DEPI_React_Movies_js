@@ -13,6 +13,45 @@
     <script src="js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
+
+    <div class="color-picker position-fixed end-0 ">
+        <div class="content d-flex">
+            <div class="color-options p-2 position-relative bg-light-gray rounded">
+                <h3 id="pick-color text-light">Pick Your Color:</h3>
+                <ul class="list-unstyled d-flex flex-wrap">
+                    <li class="w-25 p-2">
+                        <div class="w-100 color-option " tabindex="0" data-color="#d8006c"></div>
+                    </li>
+                    <li class="w-25 p-2">
+                        <div class="w-100 color-option"  tabindex="0" data-color="#8f00d1"></div>
+                    </li>
+                    <li class="w-25 p-2">
+                        <div class="w-100 color-option"  tabindex="0" data-color="#0049d1"></div>
+                    </li>
+                    <li class="w-25 p-2">
+                        <div class="w-100 color-option"  tabindex="0" data-color="#00c472"></div>
+                    </li>
+                    <li class="w-25 p-2">
+                        <div class="w-100 color-option"  tabindex="0" data-color="#babd00"></div>
+                    </li>
+                    <li class="w-25 p-2">
+                        <div class="w-100 color-option"  tabindex="0" data-color="#b86200"></div>
+                    </li>
+                    <li class="w-25 p-2">
+                        <div class="w-100 color-option"  tabindex="0" data-color="#ce0000"></div>
+                    </li>
+                    <li class="w-25 p-2">
+                        <div class="w-100 color-option"  tabindex="0" data-color="#b9006c"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="gear bg-main-color rounded-start-pill p-1 position-absolute" onclick="toggleColorPicker()">
+            <i class="fa-solid fa-gear text-light " id="icon"></i>
+            <!-- fa-spin instead of key frames -->
+        </div>
+    </div>
+
     <div class="container">
         <!-- sidebar -->
         <div class="not main content">
@@ -36,7 +75,7 @@
         <div class="main-content flex-grow-1">
             
             <!-- header -->
-            <div class="searchbar border-bottom py-5 ">
+            <div class="searchbar border-bottom py-5 " id="#top">
                 <div class="d-flex justify-content-center">
                     <h1 class="text-light me-3"> <span class="main-color">M</span>ovies <span class="text-primary">N</span>ews</h1>
                     <div class="search-container">
@@ -135,6 +174,12 @@
             
                 </form>
             </section>
+
+            <div class="up  position-fixed">
+                <div class="move-up bg-main-color rounded btn" >
+                <a href="#"></a><i class="fa-solid fa-up-long text-light fs-3"></i></a>
+                </div>
+            </div>
         </div>
     </div>
     <script src="js/main.js"></script>
